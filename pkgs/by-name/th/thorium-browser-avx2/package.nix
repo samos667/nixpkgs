@@ -54,7 +54,7 @@ stdenv.mkDerivation rec {
   version = "126.0.6478.231";
 
   src = fetchurl {
-    url = "https://github.com/Alex313031/thorium/releases/download/M${version}/thorium-browser_${version}_amd64_AVX2.deb";
+    url = "https://github.com/Alex313031/thorium/releases/download/M${version}/thorium-browser_${version}_AVX2.deb";
     hash = "";
   };
 
