@@ -4,7 +4,7 @@
   fetchPypi,
 }:
 buildPythonPackage rec {
-  pname = "ploty";
+  pname = "plotly";
   version = "5.24.1";
   pyproject = true;
   format = "setuptools";
@@ -20,7 +20,7 @@ buildPythonPackage rec {
   meta = with lib; {
     description = "Plotly's Python graphing library";
     homepage = "https://plotly.com";
-    mainProgram = "ploty";
+    mainProgram = "plotly";
     license = licenses.mit;
     maintainers = [];
   };
