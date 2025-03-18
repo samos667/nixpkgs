@@ -1009,7 +1009,7 @@ in
 
     system.nssModules = mkIf cfg.enablePam [ cfg.package ];
 
-    system.nssDatabases.group = optional cfg.enablePam "kanidm";
+    system.nssDatabases.group = optional cfg.enablePam lib.mkBefore "kanidm";
     system.nssDatabases.passwd = optional cfg.enablePam "kanidm";
 
     users.groups = mkMerge [
