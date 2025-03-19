@@ -232,6 +232,9 @@ let
       throw "Address not parseable as IPv4 nor IPv6.";
 in
 {
+  imports = [
+    (lib.mkRenamedOptionModule [ "services" "kanidm" "unixSettings" "pam_allowed_login_groups" ] [ "services" "kanidm" "unixSettings" "kanidm" "pam_allowed_login_groups" ])
+  ];
   options.services.kanidm = {
     enableClient = mkEnableOption "the Kanidm client";
     enableServer = mkEnableOption "the Kanidm server";
@@ -368,16 +371,111 @@ in
         freeformType = settingsFormat.type;
 
         options = {
-          pam_allowed_login_groups = mkOption {
-            description = "Kanidm groups that are allowed to login using PAM.";
-            example = "my_pam_group";
-            type = types.listOf types.str;
-          };
           hsm_pin_path = mkOption {
             description = "Path to a HSM pin.";
             default = "/var/cache/kanidm-unixd/hsm-pin";
             type = types.path;
           };
+
+          cache_db_path = mkOption {
+            description = "Path to cache database file";
+            type = types.nullOr types.path;
+            default = null;
+          };
+
+          sock_path = mkOption {
+            description = "Path to main socket file";
+            type = types.nullOr types.path;
+            default = null;
+          };
+
+          task_sock_path = mkOption {
+            description = "Path to task socket file";
+            type = types.nullOr types.path;
+            default = null;
+          };
+
+          cache_timeout = mkOption {
+            description = "Cache timeout duration in seconds";
+            type = types.nullOr types.int;
+            default = null;
+          };
+
+          default_shell = mkOption {
+            description = "Default shell for users";
+            type = types.nullOr types.str;
+            default = "/bin/sh";
+          };
+
+          home_prefix = mkOption {
+            description = "Prefix for home directory paths";
+            type = types.nullOr types.path;
+            default = "/home/";
+          };
+
+          home_mount_prefix = mkOption {
+            description = "Mount prefix for home directories";
+            type = types.nullOr types.path;
+            default = "/u/";
+          };
+
+          home_attr = mkOption {
+            description = "Home directory attribute name";
+            type = types.nullOr types.str;
+            default = "uuid";
+          };
+
+          home_alias = mkOption {
+            description = "Home directory alias attribute";
+            type = types.nullOr types.str;
+            default = "spn";
+          };
+
+          use_etc_skel = mkOption {
+            description = "Whether to use /etc/skel template";
+            type = types.nullOr types.bool;
+            default = false;
+          };
+
+          uid_attr_map = mkOption {
+            description = "UID attribute mapping configuration";
+            type = types.nullOr types.str;
+            default = "spn";
+          };
+
+          gid_attr_map = mkOption {
+            description = "GID attribute mapping configuration";
+            type = types.nullOr types.str;
+            default = "spn";
+          };
+
+          selinux = mkOption {
+            description = "SELinux activation status";
+            type = types.nullOr types.bool;
+            default = true;
+          };
+
+          hsm_type = mkOption {
+            description = "Type of HSM hardware";
+            type = types.nullOr types.str;
+            default = "tpm_if_possible";
+          };
+
+          tpm_tcti_name = mkOption {
+            description = "TPM TCTI device name";
+            type = types.nullOr types.str;
+            default = "device:/dev/tpmrm0";
+          };
+
+          kanidm = {
+            pam_allowed_login_groups = mkOption {
+              description = "Kanidm groups that are allowed to login using PAM.";
+              example = ["my_pam_group"];
+              default = [""];
+              type = types.listOf types.str;
+            };
+          };
+
         };
       };
       description = ''
@@ -653,6 +751,9 @@ in
   };
 
   config = mkIf (cfg.enableClient || cfg.enableServer || cfg.enablePam) {
+    services.kanidm.unixSettings = mkIf cfg.enablePam {
+      version = mkForce 2;
+    };
     assertions =
       let
         entityList =
