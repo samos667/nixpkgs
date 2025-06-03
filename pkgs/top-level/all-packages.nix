@@ -206,6 +206,8 @@ with pkgs;
     with python312Packages;
     toPythonApplication (aider-chat.withOptional { withAll = true; });
 
+  anythingllm-desktop = callPackage ../applications/misc/anythingllm-desktop { };
+
   autoreconfHook = callPackage (
     {
       makeSetupHook,
