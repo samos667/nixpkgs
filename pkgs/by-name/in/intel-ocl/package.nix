@@ -7,7 +7,6 @@
   numactl,
   zlib,
 }:
-
 stdenv.mkDerivation rec {
   pname = "intel-ocl";
   version = "5.0-63503";
@@ -15,15 +14,13 @@ stdenv.mkDerivation rec {
   src = fetchzip {
     # https://github.com/NixOS/nixpkgs/issues/166886
     urls = [
-      "https://registrationcenter-download.intel.com/akdlm/irc_nas/11396/SRB5.0_linux64.zip"
-      "http://registrationcenter-download.intel.com/akdlm/irc_nas/11396/SRB5.0_linux64.zip"
       "https://web.archive.org/web/20190526190814/http://registrationcenter-download.intel.com/akdlm/irc_nas/11396/SRB5.0_linux64.zip"
     ];
     sha256 = "0qbp63l74s0i80ysh9ya8x7r79xkddbbz4378nms9i7a0kprg9p2";
     stripRoot = false;
   };
 
-  buildInputs = [ rpmextract ];
+  buildInputs = [rpmextract];
 
   sourceRoot = ".";
 
@@ -80,8 +77,8 @@ stdenv.mkDerivation rec {
     description = "Official OpenCL runtime for Intel CPUs";
     homepage = "https://software.intel.com/en-us/articles/opencl-drivers";
     license = lib.licenses.unfree;
-    platforms = [ "x86_64-linux" ];
-    maintainers = [ ];
-    sourceProvenance = [ lib.sourceTypes.binaryNativeCode ];
+    platforms = ["x86_64-linux"];
+    maintainers = [];
+    sourceProvenance = [lib.sourceTypes.binaryNativeCode];
   };
 }
